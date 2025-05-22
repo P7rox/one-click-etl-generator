@@ -19,11 +19,14 @@ app/catalog.py - Dataset catalog
 app/ollama_client.py - Ollama API calls
 
 
-# Project Details
+# ✅ Project Details
 
 # Brief Project Description
 
-The One-Click ETL Generator is a streamlined, AI-assisted tool designed to simplify the creation of ETL pipelines. By selecting datasets, describing transformations in natural language, and configuring output options, users can automatically generate transformation logic, SQL code, and PySpark scripts — all within an interactive web UI. This tool aims to accelerate data engineering workflows and reduce manual coding errors, making ETL creation accessible even to users with limited programming experience.
+One-Click ETL Generator is a GenAI-powered Streamlit application that enables users to design and generate complete data pipelines through natural language. It simplifies the ETL development process by transforming user inputs into transformation logic, SQL queries, and PySpark code with just a few clicks—dramatically reducing the time and expertise needed to build data workflows.
+
+GitHub Repository Link:
+https://github.com/P7rox/one-click-etl-generator.git
 
 # One-Pager PDF
 
