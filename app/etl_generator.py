@@ -25,6 +25,7 @@ def generate_simple_sql(selected_datasets, nlp_input):
 
     return sql
 
+
 def generate_pyspark_code(selected_datasets, nlp_input):
     if not selected_datasets:
         return "# No datasets selected"
@@ -35,24 +36,35 @@ from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName("GeneratedETL").getOrCreate()
 
 """
+    # Track columns for each variable
+    var_columns = {}
+
     for t in tables:
         code += f"{t} = spark.table('{t}')\n"
+        var_columns[t] = catalog[t]
 
     last_var = tables[0]
+
     for i in range(1, len(tables)):
         left = last_var
         right = tables[i]
-        common_keys = set(catalog[left]) & set(catalog[right])
+        left_cols = var_columns[left]
+        right_cols = catalog[right]
+
+        common_keys = set(left_cols) & set(right_cols)
+        new_var = f"step_{i}"
+
         if common_keys:
             key = list(common_keys)[0]
-            new_var = f"step_{i}"
             code += f"{new_var} = {left}.join({right}, on='{key}', how='inner')\n"
-            last_var = new_var
+            var_columns[new_var] = list(set(left_cols + right_cols))
         else:
-            new_var = f"step_{i}"
             code += f"{new_var} = {left}.crossJoin({right})\n"
-            last_var = new_var
+            var_columns[new_var] = list(set(left_cols + right_cols))
 
+        last_var = new_var
+
+    # Simple filter example
     filter_match = re.search(r"(amount\s*[><=]+\s*\d+)", nlp_input.lower())
     if filter_match:
         code += f"{last_var} = {last_var}.filter(\"{filter_match.group(1)}\")\n"
